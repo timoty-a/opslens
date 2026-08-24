@@ -1,4 +1,17 @@
+def parse_log_line(log_line):
+    parts = log_line.split()
 
+    if len(parts) != 5:
+        return None
+
+    try:
+        endpoint = parts[2]
+        status_code = int(parts[3])
+        response_time = int(parts[4])
+    except ValueError:
+        return None
+
+    return endpoint, status_code, response_time
 status_counts = {}
 count_success = 0
 count_failure = 0
@@ -7,19 +20,14 @@ count_slow = 0
 total_response_time = 0
 with open("logs.txt", "r") as log_file:
     for log_line in log_file:
-        parts = log_line.split()
-        if len(parts) != 5:
+        parsed_log = parse_log_line(log_line)
+
+        if parsed_log is None:
             print(f"Skipping malformed log: {log_line.strip()}")
             count_skipped += 1
             continue
-        endpoint = parts[2]
-        try:
-            status_code = int(parts[3])
-            response_time = int(parts[4])
-        except ValueError:
-            print(f"Skipping malformed log: {log_line.strip()}")
-            count_skipped += 1
-            continue
+
+        endpoint, status_code, response_time = parsed_log
         if status_code in status_counts:
             status_counts[status_code] += 1
         else:
