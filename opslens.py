@@ -1,3 +1,5 @@
+
+import sys
 def parse_log_line(log_line):
     parts = log_line.split()
 
@@ -18,7 +20,19 @@ count_failure = 0
 count_skipped = 0
 count_slow = 0
 total_response_time = 0
-with open("logs.txt", "r") as log_file:
+
+if len(sys.argv) != 2:
+    print(f"Usage: python3 {sys.argv[0]} <log_file>")
+    sys.exit(1)
+
+filename = sys.argv[1]
+try:
+    log_file = open(filename, "r")
+except FileNotFoundError:
+    print(f"Error: File '{filename}' was not found.")
+    sys.exit(1)
+
+with log_file:
     for log_line in log_file:
         parsed_log = parse_log_line(log_line)
 
