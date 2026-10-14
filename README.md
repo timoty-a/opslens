@@ -48,6 +48,25 @@ python3 opslens.py logs.txt
 
 If the file does not exist, OpsLens displays an error instead of crashing.
 
+## Example summary
+
+Running the included `logs.txt` sample prints details for each valid request,
+reports two malformed lines, and ends with:
+
+```text
+Summary
+ Successful requests: 3
+ Failed requests: 2
+ Skipped requests: 2
+ slow requests: 2
+Average response time: 399.0 ms
+Status code counts: {200: 3, 500: 1, 404: 1}
+```
+
+Only valid requests contribute to the average response time. A line is skipped
+if it does not have five values or if its status code or response time cannot
+be parsed as an integer. A response time of exactly 500 ms is not counted as slow.
+
 ## Running the tests
 
 Install the development requirements:
